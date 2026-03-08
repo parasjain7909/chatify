@@ -1,10 +1,30 @@
 import  express from "express";
 import dotenv from "dotenv";
+import path from "path";
 import apiroute from "./routes/auth.api.js";
 dotenv.config();
 const app= express();
 const port= process.env.port;
+const __dirname=path.resolve();
+
+
+
+
+
 app.use("/api",apiroute);
+
+
+// make ready for the production 
+if(process.env.NODE_ENV==="production"){
+    app.use(express.static(path.join(__dirname,"../frontend/dist")))
+
+    app.get("*",(req,res)=>{
+        res.sendFile(path.join(__dirname,"../frontend/dist/index.html"))
+    })
+}
+
+
+
 app.listen(port,()=>{
     console.log("start");
 })
