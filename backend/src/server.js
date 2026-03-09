@@ -1,6 +1,7 @@
 import  express from "express";
 import dotenv from "dotenv";
 import path from "path";
+import cors from "cors";
 import apiroute from "./routes/auth.api.js";
 dotenv.config();
 const app= express();
@@ -14,6 +15,10 @@ app.get("/",(req,res)=>{
 })
 
 app.use("/api",apiroute);
+app.use(cors({
+    origin:"https://chatify-wine-eight.vercel.app",
+    credentials:true
+}))
 
 
 // // make ready for the production 
