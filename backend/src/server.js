@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import path from "path";
 import cors from "cors";
 import apiroute from "./routes/auth.api.js";
+import {connectdb} from "./lib/db.js"
 dotenv.config();
 const app= express();
 const port= process.env.PORT||5000;
@@ -33,4 +34,5 @@ app.use("/api",apiroute);
 
 app.listen(port,()=>{
     console.log("start");
+    connectdb();
 })
