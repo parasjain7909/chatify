@@ -9,19 +9,21 @@ const __dirname=path.resolve();
 
 
 
-
+app.get("/",(req,res)=>{
+    res.send("this time it has to be worked");
+})
 
 app.use("/api",apiroute);
 
 
-// make ready for the production 
-if(process.env.NODE_ENV==="production"){
-    app.use(express.static(path.join(__dirname,"../frontend/dist")))
+// // make ready for the production 
+// if(process.env.NODE_ENV==="production"){
+//     app.use(express.static(path.join(__dirname,"../frontend/dist")))
 
-    app.get("*",(req,res)=>{
-        res.sendFile(path.join(__dirname,"../frontend/dist/index.html"))
-    })
-}
+//     app.get("*",(req,res)=>{
+//         res.sendFile(path.join(__dirname,"../frontend/dist/index.html"))
+//     })
+// }
 
 
 
