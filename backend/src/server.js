@@ -8,7 +8,11 @@ const app= express();
 const port= process.env.PORT||5000;
 const __dirname=path.resolve();
 
-app.use(cors())
+app.use(cors({
+  origin: 'https://chatify-wine-eight.vercel.app',
+  credentials: true,
+ /// methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+}));
 
 
 
