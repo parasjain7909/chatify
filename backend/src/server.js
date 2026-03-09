@@ -4,7 +4,7 @@ import path from "path";
 import apiroute from "./routes/auth.api.js";
 dotenv.config();
 const app= express();
-const port= process.env.port;
+const port= process.env.PORT||5000;
 const __dirname=path.resolve();
 
 
