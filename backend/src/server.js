@@ -1,38 +1,20 @@
-import  express from "express";
+import  express from "express";// module mwi import kaam karega aur commonjs mai require
 import dotenv from "dotenv";
-import path from "path";
-import cors from "cors";
-import apiroute from "./routes/auth.api.js";
-import {connectdb} from "./lib/db.js"
+import authRouter from "./routes/auth.api.js";
+//import message from  "./routes/message.route.js";
+import {connectdb} from "./lib/db.js";
 dotenv.config();
-const app= express();
-const port= process.env.PORT||5000;
-const __dirname=path.resolve();
 
-app.use(cors({
-  origin: 'https://chatify-wine-eight.vercel.app',
-  credentials: true,
- /// methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-}));
+const PORT = process.env.PORT || 3000;
+const app = express();
+app.use(express.json());
+app.use("/api/auth", authRouter)
 
+app.get("/",(req,res)=>{
+  res.send("hello world");
+});
+app.listen(PORT,()=>{
+  console.log("server started");
+  connectdb();
 
-
-app.use("/api",apiroute);
-
-
-
-// // make ready for the production 
-// if(process.env.NODE_ENV==="production"){
-//     app.use(express.static(path.join(__dirname,"../frontend/dist")))
-
-//     app.get("*",(req,res)=>{
-//         res.sendFile(path.join(__dirname,"../frontend/dist/index.html"))
-//     })
-// }
-
-
-
-app.listen(port,()=>{
-    console.log("start");
-    connectdb();
-})
+});
