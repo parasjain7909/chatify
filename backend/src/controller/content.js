@@ -1,10 +1,13 @@
 import bcrypt from "bcrypt";
 import User from "../models/user.js";
- 
 import { generateToken } from "../lib/util.js";
+import { sendwelcomeEmail } from "../emails/emailhandlers.js";
+import "dotenv/config";
+import e from "express";
+
 export const signup = async(req, res) =>{
 
-    const {username, email, password} = req.body; // jo user ne  bheja
+    const {username, email, password} = req.body; 
     try{
     if(!username || !email || !password){
         return res.status(400).json({message: "all fields are required"});
@@ -35,11 +38,48 @@ export const signup = async(req, res) =>{
              username: newUser.username,
               email: newUser.email, 
               profilepic: newUser.profilepic    });
-    }
-    else{
+
+     // to send welcome email after successful signup
+     try {
+        await sendwelcomeEmail(email, username, process.env.CLIENT_URL);
+        
+
+    } catch (error) {
+        console.error("Error sending welcome email:", error);
+    }  
+
+
+
+
+
+}
+ else{
         res.status(400).json({message: "invalid user data"});
     }
 }catch(err){
     console.log("there is an error",err);
     res.status(500).json({message: "server error"});   }     
 }
+
+export const login = async(req, res) =>{
+    const {email, password} = req.body;      
+    try{ 
+        const user = await User.findOne({email});
+        if(!user){
+            return res.status(400).json({message: "invalid credentials"});
+        }   
+        const ispascorrect = await bcrypt.compare(password, user.password);
+        if(!ispascorrect){
+            return res.status(400).json({message: "invalid credentials"});
+        }
+        generateToken(user._id, res);
+        res.status(200).json({_id: user._id,
+             username: user.username,
+              email: user.email, 
+              profilepic: user.profilepic    });
+    }catch(err){
+        console.log("there is an error",err);
+        res.status(500).json({message: "server error"});   }};
+export const logout = async(_, res) =>{
+    res.cookie("token", "", {maxage: 0});   
+    res.status(200).json({message: "logged out successfully"});};
