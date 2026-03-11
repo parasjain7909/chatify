@@ -3,7 +3,7 @@ import User from "../models/user.js";
 import { generateToken } from "../lib/util.js";
 import { sendwelcomeEmail } from "../emails/emailhandlers.js";
 import "dotenv/config";
-import e from "express";
+import cloudinary from "../lib/cloudinary.js";
 
 export const signup = async(req, res) =>{
 
@@ -83,3 +83,17 @@ export const login = async(req, res) =>{
 export const logout = async(_, res) =>{
     res.cookie("token", "", {maxage: 0});   
     res.status(200).json({message: "logged out successfully"});};
+ export const update=async(req,res)=>{
+    try{
+       const{profilepic}=req.body;
+       if(!profilepic) return res.status(400).json({message:"no profile pic"});
+       const userid= req.user._id;
+       const uploadresponse= await cloudinary.uploader.upload(profilepic);
+      const updateduser= await user.findByIdAndUpdate(userid,{profilepic:uploadresponse.secure_url},{new:true})
+      res.status(200).json(updateduser);
+    }catch(err){
+        console.log("error occured",err);
+        res.status(500).json({message:"internal error"});
+
+    }
+ }   
