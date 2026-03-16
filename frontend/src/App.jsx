@@ -1,47 +1,38 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-import axios from "axios"
+import { BrowserRouter,Route, Routes } from "react-router-dom";
+import ChatPage from "./pages/chatpage";
+import LoginPage from "./pages/loginpage";
+import SignUpPage from "./pages/signuppage";
+import { useAuthStore } from "./store/userAuthstore";
 
 function App() {
 
-  const testApi = async () => {
-    const res = await axios.get("https://chatify-f1hw.onrender.com/api/login")
-    alert(res.data)
-  }
-
-  const [count, setCount] = useState(0)
+     const {authuser,isLogin,login} = useAuthStore();
+ 
+    console.log("authuser", authuser);
+    console.log("isLogin", isLogin);  
 
   return (
-    <>
-      <h1>Chatify Test</h1>
+    <div className="min-h-screen bg-slate-900 relative flex items-center justify-center p-4 overflow-hidden">
 
-      <button onClick={testApi}>
-        Test Backend
+      {/* DECORATORS - GRID BG & GLOW SHAPES */}
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:14px_24px]" />
+
+      <div className="absolute top-0 -left-4 size-96 bg-pink-500 opacity-20 blur-[100px]" />
+
+      <div className="absolute bottom-0 -right-4 size-96 bg-cyan-500 opacity-20 blur-[100px]" />
+      <button onClick={login} className="z-10 bg-blue-500 text-white px-4 py-2 rounded-md">
+        Login
       </button>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<ChatPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<SignUpPage />} />
+        </Routes>
+      </BrowserRouter>
 
-      <br /><br />
-
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>g
-      </div>
-
-      <h1>Vite + React</h1>
-
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-      </div>
-
-    </>
-  )
+    </div>
+  );
 }
 
-export default App
+export default App;
